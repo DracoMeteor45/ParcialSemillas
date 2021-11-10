@@ -1,0 +1,124 @@
+import plantas.*
+import INTA.*
+import Parcela.*
+
+
+describe "Primer punto"{
+	const menta1 = new Menta()
+	const menta2 = new Menta()
+	const soja1 = new Soja()
+	const quinoa1 = new Quinoa()
+	const quinoa2 = new Quinoa()
+	
+	method initialize(){
+		menta1.altura(1)
+		menta2.altura(0.3)
+		soja1.altura(0.6)
+		soja1.anioDeObtencion(2009)
+		quinoa1.horasAlSol(12)
+		quinoa1.anioDeObtencion(2010)
+		quinoa2.horasAlSol(9)
+		quinoa2.anioDeObtencion(2001)
+	}
+
+
+	test"Menta Test"{
+		assert.that(menta1.daSemillas())
+		assert.equals(3,menta1.espacio())
+		assert.notThat(menta2.daSemillas())
+		assert.equals(0.9,menta2.espacio())
+	}
+	
+	test"Soja Test"{
+		assert.equals(7,soja1.horasAlSol())
+		assert.notThat(soja1.daSemillas())
+		assert.equals(0.3,soja1.espacio())
+	}
+	
+	test "Quinoa Test"{
+		assert.that(quinoa1.daSemillas())
+		assert.that(quinoa2.daSemillas())
+	}
+	
+}
+
+
+describe "Segundo Punto"{
+	const sojaTrans1 = new SojaTrans()
+	const hierbaBuena1 = new HierbaBuena()
+	method initialize(){
+		hierbaBuena1.altura(1)
+	}
+	
+	test "Soja transgenica"{
+		assert.notThat(sojaTrans1.daSemillas())
+	}
+	
+	test "Hierbabuena"{
+		assert.equals(6,hierbaBuena1.espacio())
+	}
+}
+
+
+describe "Tercer punto" {
+	const parcela1 = new ParcelaEco() 
+	const soja1 = new Soja()
+	const soja2 = new Soja()
+	const soja3 = new Soja()
+	const soja4 = new Soja()
+	const soja5 = new Soja()
+	
+	method initialize(){
+		parcela1.ancho(20)
+		parcela1.largo(1)
+		parcela1.horasAlSol(8)
+		soja1.altura(2)
+		soja2.altura(2)
+		soja3.altura(2)
+		soja4.altura(2)
+		soja5.altura(2)
+		parcela1.addPlantas(soja1)
+		parcela1.addPlantas(soja2)
+		parcela1.addPlantas(soja3)
+		parcela1.addPlantas(soja4)
+	}
+	
+	test "parcela tolera 4 plantas"{
+		assert.equals(20, parcela1.superficie())
+		assert.equals(4, parcela1.cantidadMaxima())
+		
+	}
+	
+	test "parcela no tiene complicaciones y error"{
+		assert.notThat(parcela1.tieneComplicaciones())
+		assert.throwsException{parcela1.addPlantas(soja5)}
+	}
+	
+}
+
+
+describe "Cuarto punto" {
+	const menta1 = new Menta()
+	const quinoa1 = new Quinoa()
+	const soja1 = new Soja()
+	const sojaT = new SojaTrans()
+	const parcela1 = new ParcelaEco() 
+	method initialize(){
+		parcela1.ancho(20)
+		parcela1.largo(1)
+		parcela1.horasAlSol(6)
+	}
+	
+	test "menta le gusta" {
+		assert.that(menta1.parcelaIdeal(parcela1))
+	}
+	test "quinoa le gusta" {
+		assert.that(quinoa1.parcelaIdeal(parcela1))
+	}
+	test "Soja le gusta" {
+		assert.that(soja1.parcelaIdeal(parcela1))
+	}
+	test "Soja transgenica no le gusta" {
+		assert.notThat(sojaT.parcelaIdeal(parcela1))
+	}
+}
